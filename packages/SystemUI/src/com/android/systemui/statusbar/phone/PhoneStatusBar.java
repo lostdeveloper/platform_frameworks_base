@@ -364,6 +364,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.STATUS_BAR_BATTERY), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_BATTERY_SHOW_PERCENT), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVBAR_LEFT_IN_LANDSCAPE), false, this);
             updateSettings();
         }
 
@@ -2941,6 +2943,12 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mDockBatteryController.onBatteryMeterModeChanged(mode);
         mDockBatteryView.setShowPercent(showPercent);
         mDockBatteryController.onBatteryMeterShowPercent(showPercent);
+
+        if (mNavigationBarView != null) {
+            boolean navLeftInLandscape = Settings.System.getInt(resolver,
+                    Settings.System.NAVBAR_LEFT_IN_LANDSCAPE, 0) == 1;
+            mNavigationBarView.setLeftInLandscape(navLeftInLandscape);
+        }
     }
 
     private void resetUserSetupObserver() {
@@ -3335,4 +3343,4 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         }
     }
-} 
+}
