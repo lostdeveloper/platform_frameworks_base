@@ -41,7 +41,6 @@ import static com.android.internal.util.cm.QSConstants.TILE_USER;
 import static com.android.internal.util.cm.QSConstants.TILE_VOLUME;
 import static com.android.internal.util.cm.QSConstants.TILE_WIFI;
 import static com.android.internal.util.cm.QSConstants.TILE_WIFIAP;
-import static com.android.internal.util.cm.QSConstants.TILE_WIMAX;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -240,8 +239,6 @@ public class QuickSettingsController {
                 // User cannot add the NFC tile if the device does not support it
                 // No need to check again here
                 qs = new NfcTile(mContext, this);
-            } else if (tile.equals(TILE_WIMAX)) {
-                // Not available yet
             } else if (tile.equals(TILE_LTE)) {
                 qs = new LteTile(mContext, this);
             } else if (tile.equals(TILE_EXPANDEDDESKTOP)) {

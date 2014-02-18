@@ -74,7 +74,6 @@ import android.net.RouteInfo;
 import android.net.SamplingDataTracker;
 import android.net.Uri;
 import android.net.wifi.WifiStateTracker;
-import android.net.wimax.WimaxHelper;
 import android.net.wimax.WimaxManagerConstants;
 import android.os.AsyncTask;
 import android.os.Binder;
@@ -670,7 +669,6 @@ public class ConnectivityService extends IConnectivityManager.Stub {
 
         // start network sampling ..
         Intent intent = new Intent(ACTION_PKT_CNT_SAMPLE_INTERVAL_ELAPSED, null);
-        intent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT);
         mSampleIntervalElapsedIntent = PendingIntent.getBroadcast(mContext,
                 SAMPLE_INTERVAL_ELAPSED_REQUEST_CODE, intent, 0);
 
@@ -751,6 +749,8 @@ public class ConnectivityService extends IConnectivityManager.Stub {
         Class wimaxStateTrackerClass = null;
         Class wimaxServiceClass = null;
         Class wimaxManagerClass;
+        String wimaxJarLocation;
+        String wimaxLibLocation;
         String wimaxManagerClassName;
         String wimaxServiceClassName;
         String wimaxStateTrackerClassName;
@@ -762,6 +762,10 @@ public class ConnectivityService extends IConnectivityManager.Stub {
 
         if (isWimaxEnabled) {
             try {
+                wimaxJarLocation = context.getResources().getString(
+                        com.android.internal.R.string.config_wimaxServiceJarLocation);
+                wimaxLibLocation = context.getResources().getString(
+                        com.android.internal.R.string.config_wimaxNativeLibLocation);
                 wimaxManagerClassName = context.getResources().getString(
                         com.android.internal.R.string.config_wimaxManagerClassname);
                 wimaxServiceClassName = context.getResources().getString(
@@ -769,7 +773,10 @@ public class ConnectivityService extends IConnectivityManager.Stub {
                 wimaxStateTrackerClassName = context.getResources().getString(
                         com.android.internal.R.string.config_wimaxStateTrackerClassname);
 
-                wimaxClassLoader = WimaxHelper.getWimaxClassLoader(context);
+                if (DBG) log("wimaxJarLocation: " + wimaxJarLocation);
+                wimaxClassLoader =  new DexClassLoader(wimaxJarLocation,
+                        new ContextWrapper(context).getCacheDir().getAbsolutePath(),
+                        wimaxLibLocation, ClassLoader.getSystemClassLoader());
 
                 try {
                     wimaxManagerClass = wimaxClassLoader.loadClass(wimaxManagerClassName);
@@ -1560,9 +1567,12 @@ public class ConnectivityService extends IConnectivityManager.Stub {
             return false;
         }
         NetworkStateTracker tracker = mNetTrackers[networkType];
-        DetailedState netState = tracker.getNetworkInfo().getDetailedState();
+        DetailedState netState = DetailedState.DISCONNECTED;
+        if (tracker != null) {
+            netState = tracker.getNetworkInfo().getDetailedState();
+        }
 
-        if (tracker == null || (netState != DetailedState.CONNECTED &&
+        if ((netState != DetailedState.CONNECTED &&
                 netState != DetailedState.CAPTIVE_PORTAL_CHECK) ||
                 tracker.isTeardownRequested()) {
             if (VDBG) {
@@ -4918,3 +4928,4 @@ public class ConnectivityService extends IConnectivityManager.Stub {
         mAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, wakeupTime, intent);
     }
 }
+

@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2006 The Android Open Source Project
- * This code has been modified.  Portions copyright (C) 2010, T-Mobile USA, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,8 +73,6 @@ import android.net.wifi.IWifiManager;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.IWifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wimax.WimaxHelper;
-import android.net.wimax.WimaxManagerConstants;
 import android.nfc.NfcManager;
 import android.os.BatteryManager;
 import android.os.Binder;
@@ -591,11 +588,6 @@ class ContextImpl extends Context {
             public Object createService(ContextImpl ctx) {
                 return new ConsumerIrManager(ctx);
             }});
-
-        registerService(WimaxManagerConstants.WIMAX_SERVICE, new ServiceFetcher() {
-                public Object createService(ContextImpl ctx) {
-                    return WimaxHelper.createWimaxService(ctx, ctx.mMainThread.getHandler());
-                }});
 
         registerService(BATTERY_SERVICE, new ServiceFetcher() {
                 public Object createService(ContextImpl ctx) {

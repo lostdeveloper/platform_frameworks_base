@@ -949,3 +949,4 @@ public class SignalStrength implements Parcelable {
         Rlog.w(LOG_TAG, s);
     }
 }
+
