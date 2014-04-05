@@ -42,7 +42,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -92,7 +91,6 @@ public class KeyguardViewManager {
 
     private boolean mScreenOn = false;
     private LockPatternUtils mLockPatternUtils;
-    private AudioManager mAudioManager;
 
     private KeyguardUpdateMonitorCallback mBackgroundChanger = new KeyguardUpdateMonitorCallback() {
         @Override
@@ -120,7 +118,6 @@ public class KeyguardViewManager {
         mViewManager = viewManager;
         mViewMediatorCallback = callback;
         mLockPatternUtils = lockPatternUtils;
-        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
     }
 
     /**
@@ -215,7 +212,9 @@ public class KeyguardViewManager {
         }
 
         public void setCustomBackground(Drawable d) {
-            if (!mAudioManager.isMusicActive()) {
+            if (d == null) {
+                // new background is null, i.e. remove the 'currently playing' one and apply
+                // a custom one, if so desired.
                 int mBackgroundStyle = Settings.System.getInt(mContext.getContentResolver(),
                         Settings.System.LOCKSCREEN_BACKGROUND_STYLE, 2);
                 int mBackgroundColor = Settings.System.getInt(mContext.getContentResolver(),
