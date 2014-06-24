@@ -168,7 +168,7 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     private RecentsComponent mRecents;
 
-    private int mExpandedDesktopStyle = 0;
+    protected int mExpandedDesktopStyle = 0;
 
     public IStatusBarService getStatusBarService() {
         return mBarService;
