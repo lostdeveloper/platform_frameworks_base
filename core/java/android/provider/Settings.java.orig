@@ -2585,19 +2585,7 @@ public final class Settings {
          * "SIP_ASK_ME_EACH_TIME" : Always ask me each time
          * @hide
          */
-         public static final String SIP_CALL_OPTIONS = "sip_call_options";
-
-        /**  
-         * Enable blocking wakelock
-         * @hide
-         */
-        public static final String WAKELOCK_BLOCKING_ENABLED = "wakelock_blocking_enabled";
-
-        /**
-         * List of wakelock blocks selected
-         * @hide
-         */
-        public static final String WAKELOCK_BLOCKING_LIST = "wakelock_blocking_list";
+        public static final String SIP_CALL_OPTIONS = "sip_call_options";
 
         /**
          * One of the sip call options: Always use SIP with network access.
